@@ -2,8 +2,13 @@
     <div>
         <h3>Find</h3>
         <input type="text" v-model="value" />
-        <button @click="click">[]</button>
-        {{status}}
+        <button @click="click">😃</button>
+
+        <div style="display:block;">
+            {{status}}
+            <textarea v-if="out" type="text" rows="4" cols="50" v-model="out" />
+        </div>
+
     </div>
 </template>
 
@@ -13,7 +18,8 @@ export default {
     data(){
         return {
             value: '',
-            status: ''
+            status: '',
+            out: '',
         }
     },
 
@@ -24,14 +30,18 @@ export default {
             const value = this.value.replace(/\s+/g, ' ').trim();
 
             //search box
-            if (value.length === global.KAD_OPTIONS.NODE_ID_LENGTH){ //by hash
+            if (value.length === 2*global.KAD_OPTIONS.NODE_ID_LENGTH){ //by hash
 
 
-                PANDORA_PROTOCOL_NODE.findPandoraBox( Buffer.from( value, 'hex'), (err, out )=> {
+                PANDORA_PROTOCOL_NODE.findPandoraBox( Buffer.from( value, 'hex'), (err, pandoraBox )=> {
 
-                    if (err) return this.status = err;
+                    if (err) {
+                        this.status = 'Error';
+                        return this.out = err;
+                    }
 
-                    this.status = out.pandoraBox.toJSON();
+                    this.status = 'Success! ';
+                    this.out = JSON.stringify( pandoraBox.toJSON() );
 
                 });
 
