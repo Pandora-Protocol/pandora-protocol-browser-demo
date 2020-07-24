@@ -2,7 +2,7 @@
   "name": "pandora-protocol-browser-demo",
   "scripts": {
     "build": "webpack --config build/webpack.browser.config.js --mode production",
-    "dev": "webpack-dev-server --config=./build/webpack.browser-hot-loader.config.js --content-base dist --hot --inline --host 0.0.0.0 --mode development"
+    "dev": "webpack-dev-server --config=./build/webpack.browser-hot-loader.config.js --content-base dist --hot --inline --host 0.0.0.0 --mode development --watch"
   },
   "dependencies": {
     "vue": "^2.6",

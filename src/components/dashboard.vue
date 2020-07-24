@@ -3,10 +3,8 @@
 
         <h1>Demo Dashboard</h1>
 
-        <span>Bootstrap:</span>
-        <input type="text" v-model="bootstrap" />
-        <button @click="bootstrapNow">Bootstrap now!</button>
 
+        <bootstrap></bootstrap>
         <find></find>
         <streams></streams>
 
@@ -15,26 +13,15 @@
 
 <script>
 
+import Bootstrap from "./bootstrap/bootstrap"
 import Streams from "./streams/streams"
 import Find from "./find/find"
 
 export default {
 
-    components: {Streams, Find},
+    components: {Bootstrap, Streams, Find},
 
-    data(){
-        return {
-            bootstrap: '',
-        }
-    },
 
-    methods: {
-
-        bootstrapNow(){
-
-        }
-
-    }
 
 }
 </script>
