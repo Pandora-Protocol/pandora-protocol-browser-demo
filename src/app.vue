@@ -12,7 +12,7 @@ export default {
     mounted(){
 
         const protocol = PANDORA_PROTOCOL.KAD.ContactAddressProtocolType.CONTACT_ADDRESS_PROTOCOL_TYPE_WEBSOCKET;
-        const store = new PANDORA_PROTOCOL.KAD.StoreMemory();
+        const store = new PANDORA_PROTOCOL.KAD.storage.StoreMemory();
 
         const privateKey = PANDORA_PROTOCOL.KAD.helpers.ECCUtils.createPrivateKey();
         const publicKey = PANDORA_PROTOCOL.KAD.helpers.ECCUtils.getPublicKey(privateKey);

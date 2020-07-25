@@ -14,7 +14,7 @@
 <script>
 
 import Bootstrap from "./bootstrap/bootstrap"
-import Streams from "./streams/streams"
+import Streams from "./boxes/pandora-boxes"
 import Find from "./find/find"
 
 export default {

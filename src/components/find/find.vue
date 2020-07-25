@@ -47,8 +47,7 @@ export default {
                     }
 
                     this.status = 'Success! ';
-
-                    this.boxes.push( pandoraBox );
+                    this.boxes.push(pandoraBox);
 
                 });
 
@@ -56,6 +55,8 @@ export default {
 
 
             }
+
+
 
         }
 
