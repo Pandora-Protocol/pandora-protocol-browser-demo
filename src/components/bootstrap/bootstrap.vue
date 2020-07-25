@@ -38,7 +38,7 @@ export default {
                     return this.out = out;
                 }
 
-                this.status = 'Success! ';
+                this.status = 'Success! '+out.length;
                 this.out = JSON.stringify(out);
 
             })

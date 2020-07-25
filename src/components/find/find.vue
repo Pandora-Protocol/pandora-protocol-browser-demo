@@ -4,22 +4,28 @@
         <input type="text" v-model="value" />
         <button @click="click">😃</button>
 
-        <div style="display:block;">
-            {{status}}
-            <textarea v-if="out" type="text" rows="4" cols="50" v-model="out" />
-        </div>
+        <pandora-box v-for="(box,index) in boxes"
+                     :key="`find_pandora_box_${index}`"
+                     :box="box">
+
+        </pandora-box>
 
     </div>
 </template>
 
 <script>
+import PandoraBox from "./pandora-box"
+
 export default {
+
+    components: {PandoraBox},
 
     data(){
         return {
             value: '',
+
             status: '',
-            out: '',
+            boxes: [],
         }
     },
 
@@ -28,20 +34,21 @@ export default {
         click(){
 
             const value = this.value.replace(/\s+/g, ' ').trim();
+            this.boxes = [];
 
             //search box
             if (value.length === 2*global.KAD_OPTIONS.NODE_ID_LENGTH){ //by hash
-
 
                 PANDORA_PROTOCOL_NODE.findPandoraBox( Buffer.from( value, 'hex'), (err, pandoraBox )=> {
 
                     if (err) {
                         this.status = 'Error';
-                        return this.out = err;
+                        return console.log(err);
                     }
 
                     this.status = 'Success! ';
-                    this.out = JSON.stringify( pandoraBox.toJSON() );
+
+                    this.boxes.push( pandoraBox );
 
                 });
 
