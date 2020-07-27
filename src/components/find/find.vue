@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import PandoraBox from "./pandora-box"
+import PandoraBox from "../boxes/box/pandora-box"
 
 export default {
 
@@ -40,6 +40,8 @@ export default {
             if (value.length === 2*global.KAD_OPTIONS.NODE_ID_LENGTH){ //by hash
 
                 PANDORA_PROTOCOL_NODE.findPandoraBox( Buffer.from( value, 'hex'), (err, pandoraBox )=> {
+
+                    console.log(pandoraBox);
 
                     if (err) {
                         this.status = 'Error';

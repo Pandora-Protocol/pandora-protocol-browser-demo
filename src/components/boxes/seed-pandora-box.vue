@@ -5,6 +5,9 @@
         <input type="file" webkitdirectory mozdirectory msdirectory odirectory directory multiple @change="changed" />
 
         <textarea type="text" rows="8" cols="50" v-model="streamsText" />
+
+        <input type="text" v-model="name" />
+
         <button @click="click">seed box</button>
 
     </div>
@@ -15,6 +18,7 @@ export default {
 
     data(){
         return {
+            name:'browser demo box',
             streams: [],
             streamsMap: {},
         }
@@ -36,27 +40,40 @@ export default {
 
     methods: {
 
+        reset(){
+            this.streams = [];
+            this.streamsMap = {};
+        },
+
         changed(e){
 
-            const files = e.target.files;
-            for (let i=0; i < files.length; i++ ){
-                const file = files[i];
+            for (const stream of e.target.files){
 
-                const path = file.webkitRelativePath;
+                const path = stream.webkitRelativePath;
 
                 if (!this.streamsMap[path]) {
                     this.streams.push({
-                        stream: file,
-                        path: file.webkitRelativePath,
-                        size: file.size,
+                        stream: stream,
+                        path: stream.webkitRelativePath,
+                        size: stream.size,
                     })
                     this.streamsMap[path] = true;
                 }
+
             }
 
         },
 
         click(){
+
+            PANDORA_PROTOCOL_NODE.seedPandoraBox( this.streams, this.name, '', undefined, (err, out)=>{
+
+                console.log(err, out);
+                if (out.pandoraBox){
+                    this.reset()
+                }
+
+            } )
 
         }
     }

@@ -9,7 +9,7 @@
 <script>
 export default {
 
-    mounted(){
+    created(){
 
         const protocol = PANDORA_PROTOCOL.KAD.ContactAddressProtocolType.CONTACT_ADDRESS_PROTOCOL_TYPE_WEBSOCKET;
         const store = new PANDORA_PROTOCOL.KAD.storage.StoreMemory();
@@ -44,6 +44,7 @@ export default {
         pandoraProtocolNode.contact.signature = pandoraProtocolNode.contact.sign( );
 
         window.PANDORA_PROTOCOL_NODE = pandoraProtocolNode;
+
 
     }
 
