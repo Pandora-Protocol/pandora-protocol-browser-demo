@@ -6,6 +6,7 @@
 
         <pandora-box v-for="(box,index) in boxes"
                      :key="`find_pandora_box_${index}`"
+                     :enableStreamliner="true"
                      :box="box">
 
         </pandora-box>
@@ -48,7 +49,7 @@ export default {
                         return console.log(err);
                     }
 
-                    this.status = 'Success! ';
+                    this.status = 'Success!';
                     this.boxes.push(pandoraBox);
 
                 });

@@ -43,6 +43,8 @@ export default {
         pandoraProtocolNode.contact.identity = pandoraProtocolNode.contact.computeContactIdentity();
         pandoraProtocolNode.contact.signature = pandoraProtocolNode.contact.sign( );
 
+        pandoraProtocolNode.start();
+
         window.PANDORA_PROTOCOL_NODE = pandoraProtocolNode;
 
 

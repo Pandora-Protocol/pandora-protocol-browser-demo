@@ -7,7 +7,9 @@
 
         <textarea type="text" rows="4" cols="50" v-model="streams" />
 
-        <span @click="streamline" style="cursor: pointer" > >>>> </span>
+        <span v-if="enableStreamliner" @click="streamline" style="cursor: pointer" > >>>> </span>
+
+        Percent {{percent}} %
 
     </div>
 </template>
@@ -17,6 +19,13 @@ export default {
 
     props: {
         box: null,
+        enableStreamliner: false,
+    },
+
+    data(){
+        return {
+            percent: 0,
+        }
     },
 
     computed:{
@@ -52,6 +61,13 @@ export default {
 
         }
 
+    },
+
+    mounted(){
+        this.percent = this.box.chunksTotalAvailable / (this.box.chunksTotal || 1) * 100;
+        this.box.on('chunks/total-available', ({chunksTotalAvailable, chunksTotal} ) => {
+            this.percent = chunksTotalAvailable / ( chunksTotal || 1) * 100;
+        } )
     }
 
 }

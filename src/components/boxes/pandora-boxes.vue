@@ -5,7 +5,6 @@
         <pandora-box v-for="(box, index) in pandoraBoxes"
             :key="`pandora_box_${index}`"
             :box="box">
-
         </pandora-box>
 
         <seed-pandora-box></seed-pandora-box>
@@ -33,7 +32,7 @@ export default {
 
         this.pandoraBoxes = {...PANDORA_PROTOCOL_NODE.pandoraBoxes._boxesMap};
 
-        PANDORA_PROTOCOL_NODE.pandoraBoxes.on('pandora-box-added', pandoraBox => {
+        PANDORA_PROTOCOL_NODE.pandoraBoxes.on('pandora-box/added', pandoraBox => {
             Vue.set(this.pandoraBoxes, pandoraBox.hash.toString('hex'), pandoraBox );
         })
 
