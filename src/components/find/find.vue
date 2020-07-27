@@ -2,7 +2,7 @@
     <div>
         <h3>Find</h3>
         <input type="text" v-model="value" />
-        <button @click="click">😃</button>
+        <button @click="click">-></button>
 
         <pandora-box v-for="(box,index) in boxes"
                      :key="`find_pandora_box_${index}`"
