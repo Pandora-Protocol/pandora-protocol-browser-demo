@@ -12,12 +12,15 @@
             <span>{{stream.size}} bytes </span>
             <span>{{stream.isDone}} </span>
             <span>{{stream.percent}} % </span>
-            <span v-if="stream.percent === 100 && stream.type === 0" style="cursor: pointer" @click="saveAs(i)"> > </span>
+            <span v-if="stream.percent === 100 && stream.type === 0" style="cursor: pointer" @click="saveStreamAs(i)"> > </span>
         </div>
 
         <span v-if="enableStreamliner" @click="streamline" style="cursor: pointer" > >>>> </span>
 
         Percent {{percent}} %
+        <div v-if="percent === 100" @click="saveAs" style="cursor: pointer">
+            >>>
+        </div>
 
     </div>
 </template>
@@ -84,8 +87,16 @@ export default {
             }
         },
 
-        saveAs(index){
+        saveStreamAs(index){
             PANDORA_PROTOCOL_NODE.locations.savePandoraBoxStreamAs( this.box.streams[index], undefined, (err, out) => {
+
+                console.log(err, out);
+
+            });
+        },
+
+        saveAs(){
+            PANDORA_PROTOCOL_NODE.locations.savePandoraBoxAs( this.box, undefined, (err, out) => {
 
                 console.log(err, out);
 
