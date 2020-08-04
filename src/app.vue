@@ -1,7 +1,21 @@
 <template>
     <div>
 
+        <h2>Demo Dashboard</h2>
+
+        <div style="padding-bottom: 20px">
+            <router-link to="/bootstrap">Bootstrap</router-link>
+            <router-link to="/find">Find</router-link>
+            <router-link to="/boxes">Boxes</router-link>
+        </div>
+
         <router-view></router-view>
+
+        <p>
+            This source code is released for educational and research purposes only, with the intent of researching
+            and studying a decentralized p2p protocol for binary data streams. You may not use this source code for
+            any illegal or unethical purpose; including activities which would give rise to criminal or civil liability.
+        </p>
 
     </div>
 </template>
@@ -38,7 +52,8 @@ export default {
         ]);
 
         const contact = [
-            0,
+            KAD_OPTIONS.VERSION.APP,
+            KAD_OPTIONS.VERSION.VERSION,
             Buffer.alloc( KAD_OPTIONS.NODE_ID_LENGTH ), //empty identity
             protocol,
             '127.0.0.1',
@@ -60,6 +75,7 @@ export default {
         )
 
         pandoraProtocolNode.contact.privateKey = privateKey
+        //pandoraProtocolNode.contact.identity = KAD.helpers.BufferUtils.genBuffer(global.KAD_OPTIONS.NODE_ID_LENGTH);
         pandoraProtocolNode.contact.identity = pandoraProtocolNode.contact.computeContactIdentity();
         pandoraProtocolNode.contact.signature = pandoraProtocolNode.contact.sign( );
 
