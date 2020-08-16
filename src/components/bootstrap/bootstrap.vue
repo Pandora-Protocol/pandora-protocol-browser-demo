@@ -29,7 +29,7 @@ export default {
         bootstrapNow(){
 
             const data = PANDORA_PROTOCOL.KAD.library.bencode.decode( Buffer.from( this.bootstrap, 'hex') );
-            const contact = PANDORA_PROTOCOL.KAD.Contact.fromArray( PANDORA_PROTOCOL_NODE, data );
+            const contact = PANDORA_PROTOCOL_NODE.createContact( data );
 
             PANDORA_PROTOCOL_NODE.bootstrap( contact, true, (err, out )=>{
 

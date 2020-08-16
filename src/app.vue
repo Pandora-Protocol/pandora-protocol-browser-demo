@@ -7,15 +7,18 @@
             <router-link to="/bootstrap">Bootstrap</router-link>
             <router-link to="/find">Find</router-link>
             <router-link to="/boxes">Boxes</router-link>
+            <router-link to="/seed">Seed</router-link>
         </div>
 
         <router-view></router-view>
 
-        <p>
-            This source code is released for educational and research purposes only, with the intent of researching
-            and studying a decentralized p2p protocol for binary data streams. You may not use this source code for
-            any illegal or unethical purpose; including activities which would give rise to criminal or civil liability.
-        </p>
+        <div style="padding-top: 20px">
+            <p>
+                This source code is released for educational and research purposes only, with the intent of researching
+                and studying a decentralized p2p protocol for binary data streams. You may not use this source code for
+                any illegal or unethical purpose; including activities which would give rise to criminal or civil liability.
+            </p>
+        </div>
 
     </div>
 </template>
@@ -33,55 +36,24 @@ export default {
         PANDORA_PROTOCOL.KAD.init({
             PLUGINS:{
                 CONTACT_SYBIL_PROTECT: {
-                    SYBIL_PUBLIC_KEYS: [ sybilKeys.publicKey ],
+                    SYBIL_PUBLIC_KEYS: [ sybilKeys ],
                 }
             }
         });
+
         PANDORA_PROTOCOL.init({});
 
-        const protocol = PANDORA_PROTOCOL.KAD.ContactAddressProtocolType.CONTACT_ADDRESS_PROTOCOL_TYPE_WEBSOCKET;
-        const store = new PANDORA_PROTOCOL.KAD.storage.StoreMemory();
+        // KAD_OPTIONS.TEST_PROTOCOL = PANDORA_PROTOCOL.KAD.ContactAddressProtocolType.CONTACT_ADDRESS_PROTOCOL_TYPE_MOCK;
+        // KAD_OPTIONS.TEST_PROTOCOL = PANDORA_PROTOCOL.KAD.ContactAddressProtocolType.CONTACT_ADDRESS_PROTOCOL_TYPE_HTTP;
+        KAD_OPTIONS.TEST_PROTOCOL = PANDORA_PROTOCOL.KAD.ContactAddressProtocolType.CONTACT_ADDRESS_PROTOCOL_TYPE_WEBSOCKET;
 
-        const privateKey = PANDORA_PROTOCOL.KAD.helpers.ECCUtils.createPrivateKey();
-        const publicKey = PANDORA_PROTOCOL.KAD.helpers.ECCUtils.getPublicKey(privateKey);
+        const node = new PANDORA_PROTOCOL.PandoraProtocolNode( '' );
 
-        const sybilSignature = PANDORA_PROTOCOL.KAD.helpers.ECCUtils.sign( sybilKeys.privateKey,  KAD.helpers.CryptoUtils.sha256( publicKey ) );
-        const nonce = Buffer.concat([
-            Buffer.from("00", "hex"),
-            sybilSignature,
-        ]);
+        node.start( { } ).then((out)=>{
+            console.info("BOOTSTRAP INFO:", PANDORA_PROTOCOL.KAD.library.bencode.encode( node.contact.toArray()).toString('hex'))
+        })
 
-        const contact = [
-            KAD_OPTIONS.VERSION.APP,
-            KAD_OPTIONS.VERSION.VERSION,
-            Buffer.alloc( KAD_OPTIONS.NODE_ID_LENGTH ), //empty identity
-            protocol,
-            '127.0.0.1',
-            80,
-            '',
-            publicKey,
-            nonce,
-            Math.floor(new Date().getTime() / 1000),
-            Buffer.alloc(64), //empty signature
-            true,
-        ]
-
-        const pandoraProtocolNode = new PANDORA_PROTOCOL.PandoraProtocolNode(
-            [ ],
-            contact,
-            store,
-            undefined,
-            '',
-        )
-
-        pandoraProtocolNode.contact.privateKey = privateKey
-        //pandoraProtocolNode.contact.identity = KAD.helpers.BufferUtils.genBuffer(global.KAD_OPTIONS.NODE_ID_LENGTH);
-        pandoraProtocolNode.contact.identity = pandoraProtocolNode.contact.computeContactIdentity();
-        pandoraProtocolNode.contact.signature = pandoraProtocolNode.contact.sign( );
-
-        pandoraProtocolNode.start();
-
-        window.PANDORA_PROTOCOL_NODE = pandoraProtocolNode;
+        window.PANDORA_PROTOCOL_NODE = node;
 
 
     }
