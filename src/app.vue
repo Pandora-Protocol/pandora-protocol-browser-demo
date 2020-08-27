@@ -1,7 +1,7 @@
 <template>
     <div>
 
-        <h2>Demo Dashboard</h2>
+        <h2>Demo Research Dashboard</h2>
 
         <div style="padding-bottom: 20px">
             <router-link to="/bootstrap">Bootstrap</router-link>
@@ -45,7 +45,7 @@ export default {
 
         // KAD_OPTIONS.TEST_PROTOCOL = PANDORA_PROTOCOL.KAD.ContactAddressProtocolType.CONTACT_ADDRESS_PROTOCOL_TYPE_MOCK;
         // KAD_OPTIONS.TEST_PROTOCOL = PANDORA_PROTOCOL.KAD.ContactAddressProtocolType.CONTACT_ADDRESS_PROTOCOL_TYPE_HTTP;
-        KAD_OPTIONS.TEST_PROTOCOL = PANDORA_PROTOCOL.KAD.ContactAddressProtocolType.CONTACT_ADDRESS_PROTOCOL_TYPE_WEBSOCKET;
+        // KAD_OPTIONS.TEST_PROTOCOL = PANDORA_PROTOCOL.KAD.ContactAddressProtocolType.CONTACT_ADDRESS_PROTOCOL_TYPE_WEBSOCKET;
 
         const node = new PANDORA_PROTOCOL.PandoraProtocolNode( '' );
 
@@ -60,3 +60,21 @@ export default {
 
 }
 </script>
+
+<style>
+
+    .bold{
+        font-weight: bold;
+    }
+
+    .action{
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .block{
+        display: block;
+        margin-top: 20px
+    }
+
+</style>

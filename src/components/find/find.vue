@@ -11,6 +11,8 @@
 
         </pandora-box>
 
+        {{status}}
+
     </div>
 </template>
 

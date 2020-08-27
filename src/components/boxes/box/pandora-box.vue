@@ -1,24 +1,37 @@
 <template>
-    <div v-if="box" class="box">
+    <div v-if="box" class="box" style="margin:20px">
 
-        <span class="info">hash: {{ this.box.hash.toString('hex') }}</span>
-        <span class="info">name: {{ this.box.name }}</span>
-        <span class="info">description: {{ this.box.description }}</span>
-
-        <div v-for="(stream, i) in streams" class="streams"
-              :key="`box_stream_${i}`">
-            <span>{{stream.path}} </span>
-            <span>{{stream.type}} </span>
-            <span>{{stream.size}} bytes </span>
-            <span>{{stream.isDone}} </span>
-            <span>{{stream.percent}} % </span>
-            <span v-if="stream.percent === 100 && stream.type === 0" style="cursor: pointer" @click="saveStreamAs(i)"> > </span>
+        <div classs="block" >
+            <div>
+                <span class="info">hash: <span class="bold">{{ this.box.hash.toString('hex') }}</span></span>
+            </div>
+            <div>
+                <span class="info">name: {{ this.box.name }}</span>
+            </div>
+            <div>
+                <span class="info">description: {{ this.box.description }}</span>
+            </div>
         </div>
 
-        <span v-if="enableStreamliner" @click="streamline" style="cursor: pointer" > >>>> </span>
+        <div class="block" style="margin: 10px">
+            <div v-for="(stream, i) in streams"
+                 :key="`box_stream_${i}`">
+
+                <span>{{stream.path}} </span>
+                <span>{{stream.type}} </span>
+                <span>{{stream.size}} bytes </span>
+                <span>{{stream.isDone}} </span>
+                <span class="bold">{{stream.percent}} % </span>
+
+                <span v-if="stream.percent === 100 && stream.type === 0" class="action" @click="saveStreamAs(i)"> >>> </span>
+            </div>
+
+        </div>
+
+        <span v-if="enableStreamliner" @click="streamline" class="action"> >>>> </span>
 
         Percent {{percent}} %
-        <div v-if="percent === 100" @click="saveAs" style="cursor: pointer">
+        <div v-if="percent === 100" @click="saveAs" class="action">
             >>>
         </div>
 
@@ -136,10 +149,6 @@ export default {
 </script>
 
 <style scoped>
-    .box,
-    .info{
-        display:block;;
-    }
 
 
 </style>

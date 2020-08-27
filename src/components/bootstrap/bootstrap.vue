@@ -1,9 +1,13 @@
 <template>
     <div class="div">
 
+        <h3>Bootstrap</h3>
+
         <span>Bootstrap Contact (BENCODED):</span>
         <input type="text" v-model="bootstrap" />
-        <button @click="bootstrapNow">Bootstrap now!</button>
+
+        <span v-if="loading">Loading...</span>
+        <button v-else @click="bootstrapNow">Bootstrap now!</button>
 
         <div style="display:block;">
             {{status}}
@@ -18,6 +22,7 @@ export default {
 
     data(){
         return {
+            loading: false,
             bootstrap: '',
             status: '',
             out: '',
@@ -31,7 +36,13 @@ export default {
             const data = PANDORA_PROTOCOL.KAD.library.bencode.decode( Buffer.from( this.bootstrap, 'hex') );
             const contact = PANDORA_PROTOCOL_NODE.createContact( data );
 
+            this.loading = true;
+
             PANDORA_PROTOCOL_NODE.bootstrap( contact, true, (err, out )=>{
+
+                this.loading = false;
+
+                console.log(err, out);
 
                 if (err) {
                     this.status = 'Error';

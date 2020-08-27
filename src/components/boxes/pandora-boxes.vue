@@ -7,20 +7,17 @@
             :box="box">
         </pandora-box>
 
-        <seed-pandora-box></seed-pandora-box>
-
     </div>
 </template>
 
 <script>
 
-import SeedPandoraBox from "./seed-pandora-box"
 import PandoraBox from "./../boxes/box/pandora-box"
 import Vue from 'vue';
 
 export default {
 
-    components: {SeedPandoraBox, PandoraBox},
+    components: { PandoraBox },
 
     data(){
         return {

@@ -1,14 +1,24 @@
 <template>
     <div>
 
-        Seed Pandora Box
-        <input type="file" webkitdirectory mozdirectory msdirectory odirectory directory multiple @change="changed" />
+        <h3>Seed Pandora Box</h3>
 
-        <textarea type="text" rows="8" cols="50" v-model="streamsText" />
+        <div class="block">
+            <span>Select</span>
+            <input  type="file" webkitdirectory mozdirectory msdirectory odirectory directory multiple @change="changed" />
+        </div>
 
-        <input type="text" v-model="name" />
+        <div class="block">
+            <textarea type="text" rows="8" cols="50" v-model="streamsText" />
+        </div>
 
-        <button @click="click">seed box</button>
+        <div class="block">
+            <input  type="text" v-model="name" />
+            <span v-if="loading">...processing</span>
+            <button v-else @click="click">seed box</button>
+        </div>
+
+        {{status}}
 
     </div>
 </template>
@@ -18,6 +28,10 @@ export default {
 
     data(){
         return {
+            loading: false,
+
+            status: '',
+
             name:'browser demo box',
             streams: [],
             streamsMap: {},
@@ -66,12 +80,25 @@ export default {
 
         click(){
 
-            PANDORA_PROTOCOL_NODE.seedPandoraBox( this.streams, this.name, '', undefined, (err, out)=>{
+            this.status = '';
+
+            this.loading = true;
+            PANDORA_PROTOCOL_NODE.seedPandoraBox( this.streams, this.name, '', undefined, ()=> {
+
+            }, (err, out)=>{
 
                 console.log(err, out);
-                if (out.pandoraBox){
+
+                this.loading = false;
+
+                if (err)
+                    this.status = err;
+                else
+                    this.status = 'Success! ' + out.pandoraBox.hashHex;
+
+                if (out && out.pandoraBox)
                     this.reset()
-                }
+
 
             } )
 
