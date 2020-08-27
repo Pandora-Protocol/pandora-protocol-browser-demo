@@ -1,25 +1,33 @@
 <template>
     <div>
-
-        <h2>Demo Research Dashboard</h2>
-
-        <div style="padding-bottom: 20px">
-            <router-link to="/bootstrap">Bootstrap</router-link>
-            <router-link to="/find">Find</router-link>
-            <router-link to="/boxes">Boxes</router-link>
-            <router-link to="/seed">Seed</router-link>
+        <div v-if="!$store.state.pandoraProtocol.ready">
+            <span>Initializing Pandora Protocol...</span>
         </div>
+        <div v-else>
 
-        <router-view></router-view>
+            <h2>Demo Research Dashboard</h2>
 
-        <div style="padding-top: 20px">
-            <p>
-                This source code is released for educational and research purposes only, with the intent of researching
-                and studying a decentralized p2p protocol for binary data streams. You may not use this source code for
-                any illegal or unethical purpose; including activities which would give rise to criminal or civil liability.
-            </p>
+            <div style="padding-bottom: 20px">
+                <router-link to="/bootstrap">Bootstrap</router-link>
+                <router-link to="/find">Find</router-link>
+                <router-link to="/boxes">Boxes</router-link>
+                <router-link to="/seed">Seed</router-link>
+                <router-link to="/info">Info</router-link>
+            </div>
+
+            <router-view></router-view>
+
+            <div style="padding-top: 20px">
+                <p style="color: gray">
+                    Disclaimer:
+
+                    This source code is released for educational and research purposes only, with the intent of researching
+                    and studying a decentralized p2p protocol for binary data streams. You may not use this source code for
+                    any illegal or unethical purpose; including activities which would give rise to criminal or civil liability.
+                </p>
+            </div>
+
         </div>
-
     </div>
 </template>
 
@@ -50,7 +58,10 @@ export default {
         const node = new PANDORA_PROTOCOL.PandoraProtocolNode( '' );
 
         node.start( { } ).then((out)=>{
-            console.info("BOOTSTRAP INFO:", PANDORA_PROTOCOL.KAD.library.bencode.encode( node.contact.toArray()).toString('hex'))
+
+            this.$store.dispatch('pandoraProtocolChangeContact', node.contact )
+            this.$store.dispatch('pandoraProtocolChangeReady', true)
+
         })
 
         window.PANDORA_PROTOCOL_NODE = node;
@@ -76,5 +87,6 @@ export default {
         display: block;
         margin-top: 20px
     }
+
 
 </style>
