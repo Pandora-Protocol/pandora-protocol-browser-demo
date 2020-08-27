@@ -4,6 +4,10 @@ export default {
         state.ready = value;
     },
 
+    setOptions(state, value){
+        state.options = value;
+    },
+
     setContact(state, contact){
         state.contact = PANDORA_PROTOCOL.KAD.library.bencode.encode( contact.toArray());
         state.contactJSON = contact.toJSON();

@@ -18,7 +18,13 @@
             <router-view></router-view>
 
             <div style="padding-top: 20px">
-                <p style="color: gray">
+                <span>
+                    PandoraProtocol ({{$store.state.pandoraProtocol.options.VERSION.APP}}) - v{{$store.state.pandoraProtocol.options.VERSION.VERSION}} [ >= {{$store.state.pandoraProtocol.options.VERSION.VERSION_COMPATIBILITY}}]
+                </span>
+            </div>
+
+            <div style="padding-top: 20px">
+                <p style="color: gray; font-size: 10px">
                     Disclaimer:
 
                     This source code is released for educational and research purposes only, with the intent of researching
@@ -51,14 +57,11 @@ export default {
 
         PANDORA_PROTOCOL.init({});
 
-        // KAD_OPTIONS.TEST_PROTOCOL = PANDORA_PROTOCOL.KAD.ContactAddressProtocolType.CONTACT_ADDRESS_PROTOCOL_TYPE_MOCK;
-        // KAD_OPTIONS.TEST_PROTOCOL = PANDORA_PROTOCOL.KAD.ContactAddressProtocolType.CONTACT_ADDRESS_PROTOCOL_TYPE_HTTP;
-        // KAD_OPTIONS.TEST_PROTOCOL = PANDORA_PROTOCOL.KAD.ContactAddressProtocolType.CONTACT_ADDRESS_PROTOCOL_TYPE_WEBSOCKET;
-
         const node = new PANDORA_PROTOCOL.PandoraProtocolNode( '' );
 
         node.start( { } ).then((out)=>{
 
+            this.$store.dispatch('pandoraProtocolChangeOptions', KAD_OPTIONS )
             this.$store.dispatch('pandoraProtocolChangeContact', node.contact )
             this.$store.dispatch('pandoraProtocolChangeReady', true)
 
@@ -85,8 +88,27 @@ export default {
 
     .block{
         display: block;
-        margin-top: 20px
+        margin-bottom: 20px
     }
 
+    span{
+        font-size: 14px
+    }
+
+    p{
+        font-size: 8px;
+    }
+
+    h1{
+        font-size: 20px
+    }
+
+    h2{
+        font-size: 18px;
+    }
+
+    h3{
+        font-size: 15px;
+    }
 
 </style>

@@ -14,6 +14,7 @@ const isAnalyze = process.argv.includes('--analyze') || process.argv.includes('-
 
 
 module.exports = {
+
     //define entry point
     entry: ['babel-regenerator-runtime'],
     devtool: isProd ? false : '#cheap-module-source-map',
