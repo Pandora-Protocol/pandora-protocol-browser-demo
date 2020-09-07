@@ -28,7 +28,10 @@
 
         </div>
 
-        <span v-if="enableStreamliner" @click="streamline" class="action"> >>>> </span>
+        <div v-if="enableStreamliner">
+            <span v-if="streamlineLoading">...loading</span>
+            <span v-else @click="streamline" class="action"> >>>> </span>
+        </div>
 
         Percent {{percent}} %
         <div v-if="percent === 100" @click="saveAs" class="action">
@@ -50,6 +53,7 @@ export default {
     data(){
         return {
             percent: 0,
+            streamlineLoading: false,
             streams: [],
         }
     },
@@ -63,6 +67,8 @@ export default {
 
         streamline(){
 
+            this.streamlineLoading = true;
+
             PANDORA_PROTOCOL_NODE.getPandoraBox( this.box.hash, (err, pandoraBox )=> {
 
                 if (err) {
@@ -72,6 +78,9 @@ export default {
 
                 this.status = 'Success! ';
                 console.log(this.box);
+
+                this.streamlineLoading = false;
+                this.$router.push('/boxes')
 
             });
 

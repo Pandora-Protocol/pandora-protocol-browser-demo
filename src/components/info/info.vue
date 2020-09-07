@@ -47,8 +47,8 @@ export default {
 
             const connected = {};
 
-            for (const key in PANDORA_PROTOCOL_NODE.rules._alreadyConnected) {
-                const node = PANDORA_PROTOCOL_NODE.rules._alreadyConnected[key];
+            for (const key in PANDORA_PROTOCOL_NODE.rules.alreadyConnected) {
+                const node = PANDORA_PROTOCOL_NODE.rules.alreadyConnected[key];
                 connected[key] = {
                     type: node.isWebRTC ? 'webrtc' : 'websocket',
                 }

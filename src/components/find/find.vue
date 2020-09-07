@@ -54,8 +54,6 @@ export default {
                     this.status = 'Success!';
                     this.boxes.push(pandoraBox);
 
-                   // this.$router.push('/boxes')
-
                 });
 
             } else { //by keyword hash
