@@ -50,12 +50,26 @@ export default {
             for (const key in PANDORA_PROTOCOL_NODE.rules.alreadyConnected) {
                 const node = PANDORA_PROTOCOL_NODE.rules.alreadyConnected[key];
                 connected[key] = {
-                    type: node.isWebRTC ? 'webrtc' : 'websocket',
+                    type: this._nodeType(node),
+                    status: this._nodeStatus(node),
                 }
             }
 
             this.connectedContacts = connected;
 
+        },
+
+        _nodeType(node){
+            if (node.isWebRTC) return 'webrtc';
+            if (node.isWebSocket) return 'websocket';
+            return '';
+        },
+
+        _nodeStatus(node){
+            if (node.status === 0) return 'CLOSED';
+            if (node.status === 1) return 'OPENING';
+            if (node.status === 2) return 'OPEN';
+            return '';
         }
 
     },

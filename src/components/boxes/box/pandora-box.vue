@@ -88,6 +88,8 @@ export default {
 
         getPandoraBoxStreams(){
 
+            if (!this.box.streams) return [];
+
             const out = [];
             for (let i=0; i < this.box.streams.length; i++) {
                 const stream = this.box.streams[i];
@@ -140,17 +142,22 @@ export default {
         this.streams = this.getPandoraBoxStreams();
 
         this.percent = this.box.percent;
-        this.box.on('chunks/total-available', ( ) => {
-            this.percent = this.box.percent;
-        } )
 
-        this.box.on('stream-chunk/done', ({stream})=>{
-            this.refreshStream(stream);
-        })
+        if (this.box.events){
 
-        this.box.on('stream/done', ({stream}) => {
-            this.refreshStream(stream);
-        });
+            this.box.events.on('chunks/total-available', ( ) => {
+                this.percent = this.box.percent;
+            } )
+
+            this.box.events.on('stream-chunk/done', ({stream})=>{
+                this.refreshStream(stream);
+            })
+
+            this.box.events.on('stream/done', ({stream}) => {
+                this.refreshStream(stream);
+            });
+
+        }
 
     }
 

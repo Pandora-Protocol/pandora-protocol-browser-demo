@@ -9,7 +9,9 @@
         </div>
 
         <div class="block">
-            <textarea type="text" rows="8" cols="50" v-model="streamsText" />
+            <textarea type="text" rows="8" cols="50">
+                {{streamsText}}
+            </textarea>
         </div>
 
         <div class="block">

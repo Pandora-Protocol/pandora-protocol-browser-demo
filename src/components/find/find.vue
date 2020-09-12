@@ -1,7 +1,7 @@
 <template>
     <div>
         <h3>Find</h3>
-        <input type="text" v-model="value" />
+        <input type="text" v-model="value" v-on:keyup.enter="onEnter" />
         <button @click="click">-></button>
 
         <pandora-box v-for="(box,index) in boxes"
@@ -34,8 +34,13 @@ export default {
 
     methods:{
 
+        onEnter(){
+            return this.click();
+        },
+
         click(){
 
+            this.status = '';
             const value = this.value.replace(/\s+/g, ' ').trim();
             this.boxes = [];
 
@@ -44,11 +49,11 @@ export default {
 
                 PANDORA_PROTOCOL_NODE.findPandoraBox( Buffer.from( value, 'hex'), (err, pandoraBox )=> {
 
-                    console.log(pandoraBox);
+                    console.log(err, pandoraBox);
 
                     if (err) {
                         this.status = 'Error';
-                        return console.log(err);
+                        return;
                     }
 
                     this.status = 'Success!';
@@ -57,6 +62,21 @@ export default {
                 });
 
             } else { //by keyword hash
+
+                PANDORA_PROTOCOL_NODE.findPandoraBoxesByName( value, (err, out) =>{
+
+                    console.log(err, out);
+                    if (err){
+                        this.status = 'Error';
+                        return;
+                    }
+
+                    for (const key in out.result)
+                        this.boxes.push( out.result[key] );
+
+                    this.status = 'Success!';
+
+                } );
 
 
             }
