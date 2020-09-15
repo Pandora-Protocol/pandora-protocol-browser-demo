@@ -1,7 +1,9 @@
 <template>
     <div>
         <div v-if="!$store.state.pandoraProtocol.ready">
+
             <span>Initializing Pandora Protocol...</span>
+
         </div>
         <div v-else>
 
@@ -34,17 +36,25 @@
             </div>
 
         </div>
+
+        <sybil-protect-sign-modal ref="refSybilProtectSignModal" />
+
     </div>
 </template>
 
 <script>
+
+import SybilProtectSignModal from "src/components/sybil-protect-sign-modal/sybil-protect-sign.modal"
+
 export default {
+
+    components: {SybilProtectSignModal},
 
     created(){
 
         const sybilKeys = {
-            privateKey: Buffer.from("b485c3728923b3cc3ad88d8b10c69b3c68818594ca0d213542caad212fa7c063", 'hex'),
-            publicKey: Buffer.from("04e67b866b907ad108d1bb1fbddf2672dfe96c8f1e24a9f922f57e330eca7ab1af821a40e4a29594df1e014083ab2112c5a3d1f1333c7717b7e73d63cea7feeef8", 'hex'),
+            publicKey: Buffer.from("049cf62611922a64575439fd14e0a1190c40184c4d20a1c7179828693d574e84b94b70c3f3995b7a2cd826e1e8ef9eb8ccf90e578891ecfe10de6a4dc9371cd19a", 'hex'),
+            uri: 'http://pandoraprotocol.ddns.net:9090'
         }
 
         PANDORA_PROTOCOL.KAD.init({
@@ -58,6 +68,14 @@ export default {
         PANDORA_PROTOCOL.init({});
 
         const node = new PANDORA_PROTOCOL.PandoraProtocolNode( '' );
+
+        node._options.PluginSybilSign.openWindow = ({origin, uri, publicKey, promise, message, resolve, reject}) => {
+            this.$refs['refSybilProtectSignModal'].showModal(null, origin, uri, message, promise, resolve, reject);
+        }
+
+        node._options.PluginSybilSign.onCloseWindow = () => {
+            this.$refs['refSybilProtectSignModal'].hideModal();
+        }
 
         node.start( { } ).then((out)=>{
 

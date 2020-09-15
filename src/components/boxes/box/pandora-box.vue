@@ -1,16 +1,22 @@
 <template>
     <div v-if="box" class="box" style="margin:20px">
 
-        <div classs="block" >
-            <div>
-                <span class="info">hash: <span class="bold">{{ this.box.hash.toString('hex') }}</span></span>
+        <div>
+
+            <vote class="vote" :hash="box.hashHex" />
+
+            <div class="meta" >
+                <div>
+                    <span class="info">hash: <span class="bold">{{ this.box.hash.toString('hex') }}</span></span>
+                </div>
+                <div>
+                    <span class="info">name: {{ this.box.name }}</span>
+                </div>
+                <div>
+                    <span class="info">description: {{ this.box.description }}</span>
+                </div>
             </div>
-            <div>
-                <span class="info">name: {{ this.box.name }}</span>
-            </div>
-            <div>
-                <span class="info">description: {{ this.box.description }}</span>
-            </div>
+
         </div>
 
         <div class="block" style="margin: 10px">
@@ -42,8 +48,13 @@
 </template>
 
 <script>
+
 import Vue from 'vue';
+import Vote from "src/components/vote/vote"
+
 export default {
+
+    components: {Vote},
 
     props: {
         box: null,
@@ -166,5 +177,13 @@ export default {
 
 <style scoped>
 
+    .vote{
+        display: inline-block;
+        vertical-align:top;
+    }
+
+    .meta{
+        display: inline-block;
+    }
 
 </style>

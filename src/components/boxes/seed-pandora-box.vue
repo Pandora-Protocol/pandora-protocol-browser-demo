@@ -85,7 +85,7 @@ export default {
             this.status = '';
 
             this.loading = true;
-            PANDORA_PROTOCOL_NODE.seedPandoraBox( this.streams, this.name, '', undefined, ()=> {
+            PANDORA_PROTOCOL_NODE.seedPandoraBox( this.streams, this.name, '', [], undefined, ()=> {
 
             }, (err, out)=>{
 
