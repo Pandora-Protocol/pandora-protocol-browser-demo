@@ -14,8 +14,8 @@ export default {
     },
 
     setPandoraBoxStreamPercent(state, pandoraBoxStream){
-        Vue.set(state.list[ pandoraBox.hashHex ], 'percent', pandoraBox.percent );
-        Vue.set(state.list[ pandoraBox.hashHex ], 'isDone', pandoraBox.isDone );
+        Vue.set(state.list[ pandoraBoxStream.hashHex ], 'percent', pandoraBoxStream.percent );
+        Vue.set(state.list[ pandoraBoxStream.hashHex ], 'isDone', pandoraBoxStream.isDone );
     },
 
     removePandoraBoxStream(state, pandoraBoxStream){

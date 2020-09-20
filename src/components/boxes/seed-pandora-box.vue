@@ -80,29 +80,29 @@ export default {
 
         },
 
-        click(){
+        async click(){
 
             this.status = '';
 
             this.loading = true;
-            PANDORA_PROTOCOL_NODE.seedPandoraBox( this.streams, this.name, '', [], undefined, ()=> {
 
-            }, (err, out)=>{
+            try{
 
-                console.log(err, out);
+                const out = await PANDORA_PROTOCOL_NODE.seedPandoraBox( this.streams, this.name, '', [], undefined );
+                console.log(out);
 
-                this.loading = false;
-
-                if (err)
-                    this.status = err;
-                else
-                    this.status = 'Success! ' + out.pandoraBox.hashHex;
+                this.status = 'Success! ' + out.pandoraBox.hashHex;
 
                 if (out && out.pandoraBox)
                     this.reset()
 
 
-            } )
+            }catch(err){
+                console.error(err);
+                this.status = err;
+            }finally{
+                this.loading = false;
+            }
 
         }
     }

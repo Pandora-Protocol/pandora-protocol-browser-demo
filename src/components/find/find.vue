@@ -66,9 +66,12 @@ export default {
                 try{
                     const out = await PANDORA_PROTOCOL_NODE.findPandoraBoxesByName( value );
 
+                    for (const key in out.result) {
+                        const box = out.result[key].toJSON(true)
+                        box.hash = out.result[key].hash.toString('hex');
 
-                    for (const key in out.result)
-                        this.boxes.push( out.result[key] );
+                        this.boxes.push( box );
+                    }
 
                     this.status = 'Success!';
 

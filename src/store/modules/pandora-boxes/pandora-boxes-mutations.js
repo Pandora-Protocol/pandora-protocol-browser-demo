@@ -9,6 +9,9 @@ export default {
         out.isDone = pandoraBox.isDone;
         out.percent = pandoraBox.percent;
 
+        for (let i=0; i < pandoraBox.streams.length; i++)
+            out.streams[i].hash = pandoraBox.streams[i].hashHex;
+
         Vue.set(state.list, pandoraBox.hashHex, out );
     },
 

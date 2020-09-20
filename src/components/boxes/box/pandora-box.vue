@@ -33,11 +33,11 @@
                 <span>{{stream.type}} </span>
                 <span>{{stream.size}} bytes </span>
 
-                <template v-if="pandoraBoxStreams[stream.hash]">
+                <template v-if="pandoraBoxStreams[stream.hash] && stream.type === 0">
                     <span>{{pandoraBoxStreams[stream.hash].isDone}} </span>
                     <span class="bold">{{pandoraBoxStreams[stream.hash].percent}} % </span>
 
-                    <span v-if="pandoraBoxStreams[stream.hash].percent === 100 && stream.type === 0" class="action" @click="saveStreamAs(i)"> >>> </span>
+                    <span v-if="pandoraBoxStreams[stream.hash].percent === 100 " class="action" @click="saveStreamAs(stream.hash)"> >>> </span>
                 </template>
 
             </div>
@@ -73,6 +73,7 @@ export default {
 
     data(){
         return {
+            streamlineLoading: false,
         }
     },
 
@@ -106,13 +107,15 @@ export default {
 
         },
 
-        async saveStreamAs(index){
-            const out = await PANDORA_PROTOCOL_NODE.locations.savePandoraBoxStreamAs( this.box.streams[index], undefined);
+        async saveStreamAs(hash){
+            const stream = PANDORA_PROTOCOL_NODE.pandoraBoxes.streamsMap[ hash ];
+            const out = await PANDORA_PROTOCOL_NODE.locations.savePandoraBoxStreamAs( stream );
             console.log(out);
         },
 
         async saveAs(){
-            const out = await PANDORA_PROTOCOL_NODE.locations.savePandoraBoxAs( this.box, undefined);
+            const box = PANDORA_PROTOCOL_NODE.pandoraBoxes.boxesMap[ this.box.hash ];
+            const out = await PANDORA_PROTOCOL_NODE.locations.savePandoraBoxAs( box );
             console.log(out);
         },
 
