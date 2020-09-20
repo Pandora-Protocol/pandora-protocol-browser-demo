@@ -3,11 +3,11 @@
 
         <div>
 
-            <vote class="vote" :hash="box.hashHex" />
+            <vote class="vote" :hash="box.hash" />
 
             <div class="meta" >
                 <div>
-                    <span class="info">hash: <span class="bold">{{ this.box.hash.toString('hex') }}</span></span>
+                    <span class="info">hash: <span class="bold">{{ this.box.hash }}</span></span>
                 </div>
                 <div>
                     <span class="info">name: {{ this.box.name }}</span>
@@ -15,21 +15,31 @@
                 <div>
                     <span class="info">description: {{ this.box.description }}</span>
                 </div>
+                <div>
+                    <span class="info">size: {{this.box.size}}</span>
+                </div>
+                <div>
+                    <span class="info">categories: {{this.box.categories.join(' --> ')}}</span>
+                </div>
             </div>
 
         </div>
 
         <div class="block" style="margin: 10px">
-            <div v-for="(stream, i) in streams"
+            <div v-for="(stream, i) in this.box.streams"
                  :key="`box_stream_${i}`">
 
                 <span>{{stream.path}} </span>
                 <span>{{stream.type}} </span>
                 <span>{{stream.size}} bytes </span>
-                <span>{{stream.isDone}} </span>
-                <span class="bold">{{stream.percent}} % </span>
 
-                <span v-if="stream.percent === 100 && stream.type === 0" class="action" @click="saveStreamAs(i)"> >>> </span>
+                <template v-if="pandoraBoxStreams[stream.hash]">
+                    <span>{{pandoraBoxStreams[stream.hash].isDone}} </span>
+                    <span class="bold">{{pandoraBoxStreams[stream.hash].percent}} % </span>
+
+                    <span v-if="pandoraBoxStreams[stream.hash].percent === 100 && stream.type === 0" class="action" @click="saveStreamAs(i)"> >>> </span>
+                </template>
+
             </div>
 
         </div>
@@ -39,8 +49,8 @@
             <span v-else @click="streamline" class="action"> >>>> </span>
         </div>
 
-        Percent {{percent}} %
-        <div v-if="percent === 100" @click="saveAs" class="action">
+        Percent {{box.percent}} %
+        <div v-if="box.percent === 100" @click="saveAs" class="action">
             >>>
         </div>
 
@@ -63,112 +73,54 @@ export default {
 
     data(){
         return {
-            percent: 0,
-            streamlineLoading: false,
-            streams: [],
         }
     },
 
     computed:{
-
-
+        pandoraBoxStreams(){
+            return this.$store.state.pandoraBoxStreams.list;
+        },
     },
 
     methods:{
 
-        streamline(){
+        async streamline(){
 
             this.streamlineLoading = true;
 
-            PANDORA_PROTOCOL_NODE.getPandoraBox( this.box.hash, (err, pandoraBox )=> {
+            this.status = '';
 
-                if (err) {
-                    this.status = 'Error';
-                    return console.log(err);
-                }
+            try{
+                const pandoraBox = await PANDORA_PROTOCOL_NODE.getPandoraBox( this.box.hash);
+                console.log(pandoraBox);
 
                 this.status = 'Success! ';
-                console.log(this.box);
 
                 this.streamlineLoading = false;
                 this.$router.push('/boxes')
 
-            });
-
-        },
-
-        getPandoraBoxStreams(){
-
-            if (!this.box.streams) return [];
-
-            const out = [];
-            for (let i=0; i < this.box.streams.length; i++) {
-                const stream = this.box.streams[i];
-                out.push( this.streamToInfoObject(stream) );
+            }catch(err){
+                this.status = 'Error';
+                return console.log(err);
             }
 
-            return out;
         },
 
-        streamToInfoObject(stream){
-
-            return {
-                hash: stream.hash.toString('hex'),
-                path: stream.path,
-                type: stream.type,
-                size: stream.size,
-                isDone: stream.isDone,
-                percent: stream.percent,
-            }
+        async saveStreamAs(index){
+            const out = await PANDORA_PROTOCOL_NODE.locations.savePandoraBoxStreamAs( this.box.streams[index], undefined);
+            console.log(out);
         },
 
-        saveStreamAs(index){
-            PANDORA_PROTOCOL_NODE.locations.savePandoraBoxStreamAs( this.box.streams[index], undefined, (err, out) => {
-
-                console.log(err, out);
-
-            });
+        async saveAs(){
+            const out = await PANDORA_PROTOCOL_NODE.locations.savePandoraBoxAs( this.box, undefined);
+            console.log(out);
         },
 
-        saveAs(){
-            PANDORA_PROTOCOL_NODE.locations.savePandoraBoxAs( this.box, undefined, (err, out) => {
-
-                console.log(err, out);
-
-            });
-        },
-
-        refreshStream(stream){
-
-            for (let i=0; i < this.streams.length; i++)
-                if (this.streams[i].path === stream.path)
-                    Vue.set(this.streams, i, this.streamToInfoObject(stream) );
-
-        }
 
     },
 
     mounted(){
 
-        this.streams = this.getPandoraBoxStreams();
-
-        this.percent = this.box.percent;
-
-        if (this.box.events){
-
-            this.box.events.on('chunks/total-available', ( ) => {
-                this.percent = this.box.percent;
-            } )
-
-            this.box.events.on('stream-chunk/done', ({stream})=>{
-                this.refreshStream(stream);
-            })
-
-            this.box.events.on('stream/done', ({stream}) => {
-                this.refreshStream(stream);
-            });
-
-        }
 
     }
 

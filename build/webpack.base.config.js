@@ -10,13 +10,12 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const isProd = process.env.NODE_ENV === 'production';
 const isAnalyze = process.argv.includes('--analyze') || process.argv.includes('--analyse');
 
-//const isAnalyze = false;
 
 
 module.exports = {
 
     //define entry point
-    entry: ['babel-regenerator-runtime'],
+    entry: ["./app.js"],
     devtool: isProd ? false : '#cheap-module-source-map',
     // send to distribution
     output: {
@@ -60,15 +59,13 @@ module.exports = {
                 test: /\.js$/,
                 loader: 'babel-loader',
                 exclude: [/node_modules/],
-                query: {
-                    presets: ['@babel/preset-env']
-                }
             }
         ]
     },
     plugins:
 
         [
+
             new VueLoaderPlugin(),
 
             new webpack.DefinePlugin({

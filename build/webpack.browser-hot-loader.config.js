@@ -8,7 +8,7 @@ const config = merge(base, {
     devtool: 'cheap-module-eval-source-map',
 
     entry: [
-        'webpack-hot-middleware/client',
+        "babel-regenerator-runtime",
         './src/main.js'
     ],
 
@@ -19,6 +19,8 @@ const config = merge(base, {
     },
 
     devServer: {
+        disableHostCheck: true,
+
         port: 8080,
         historyApiFallback: {
             index: '/demo.html'

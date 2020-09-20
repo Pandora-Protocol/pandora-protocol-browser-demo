@@ -1,3 +1,5 @@
+require("babel-regenerator-runtime");
+
 let initialized = false
 
 function initialize(){
@@ -9,12 +11,12 @@ function initialize(){
 
     }
 
-    document.addEventListener("DOMContentLoaded",  (event) => {
+    window.onload = function () {
 
         console.log("Demo Protocol Browser");
         load();
 
-    });
+    };
 
 }
 

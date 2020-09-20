@@ -19,21 +19,19 @@ export default {
 
     components: { PandoraBox },
 
-    data(){
-        return {
-            pandoraBoxes: {},
+    computed: {
+
+        pandoraBoxes(){
+            return this.$store.state.pandoraBoxes.list;
         }
+
     },
 
-    mounted(){
+    methods: {
 
-        this.pandoraBoxes = {...PANDORA_PROTOCOL_NODE.pandoraBoxes._boxesMap};
 
-        PANDORA_PROTOCOL_NODE.pandoraBoxes.on('pandora-box/added', pandoraBox => {
-            Vue.set(this.pandoraBoxes, pandoraBox.hash.toString('hex'), pandoraBox );
-        })
 
-    }
+    },
 
 }
 </script>

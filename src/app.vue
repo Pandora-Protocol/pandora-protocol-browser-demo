@@ -45,16 +45,17 @@
 <script>
 
 import SybilProtectSignModal from "src/components/sybil-protect-sign-modal/sybil-protect-sign.modal"
+import Vue from "vue";
 
 export default {
 
     components: {SybilProtectSignModal},
 
-    created(){
+    async created(){
 
         const sybilKeys = {
             publicKey: Buffer.from("049cf62611922a64575439fd14e0a1190c40184c4d20a1c7179828693d574e84b94b70c3f3995b7a2cd826e1e8ef9eb8ccf90e578891ecfe10de6a4dc9371cd19a", 'hex'),
-            uri: 'http://pandoraprotocol.ddns.net:9090'
+            uri: 'http://pandoraprotocol.ddns.net:9090/challenge/',
         }
 
         PANDORA_PROTOCOL.KAD.init({
@@ -69,23 +70,33 @@ export default {
 
         const node = new PANDORA_PROTOCOL.PandoraProtocolNode( '' );
 
-        node._options.PluginSybilSign.openWindow = ({origin, uri, publicKey, promise, message, resolve, reject}) => {
+        node.sybilProtectSigner.openWindow = ({origin, uri, promise, message, resolve, reject}) => {
             this.$refs['refSybilProtectSignModal'].showModal(null, origin, uri, message, promise, resolve, reject);
         }
 
-        node._options.PluginSybilSign.onCloseWindow = () => {
+        node.sybilProtectSigner.onCloseWindow = () => {
             this.$refs['refSybilProtectSignModal'].hideModal();
         }
 
-        node.start( { } ).then((out)=>{
+        await node.start();
 
-            this.$store.dispatch('pandoraProtocolChangeOptions', KAD_OPTIONS )
-            this.$store.dispatch('pandoraProtocolChangeContact', node.contact )
-            this.$store.dispatch('pandoraProtocolChangeReady', true)
-
-        })
+        this.$store.dispatch('pandoraProtocolChangeOptions', KAD_OPTIONS )
+        this.$store.dispatch('pandoraProtocolChangeContact', node.contact )
+        this.$store.dispatch('pandoraProtocolChangeReady', true)
 
         window.PANDORA_PROTOCOL_NODE = node;
+
+        for (const key in node.pandoraBoxes._boxesMap)
+            this.$store.dispatch('pandoraBoxesAdd', node.pandoraBoxes._boxesMap[key])
+
+        node.pandoraBoxes.on('pandora-box/added', pandoraBox => this.$store.dispatch('pandoraBoxesAdd', pandoraBox) )
+
+
+        node.pandoraBoxes.on('pandora-box/chunks/total-available', ({pandoraBox}) => this.$store.dispatch('pandoraBoxesUpdatePercent', pandoraBox) )
+
+
+        node.pandoraBoxes.on('stream/chunk/done', ({stream})=> this.$store.dispatch('pandoraBoxStreamUpdate') );
+        node.pandoraBoxes.on('stream/done', ({stream})=> this.$store.dispatch('pandoraBoxStreamUpdate') );
 
 
     }

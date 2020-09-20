@@ -38,7 +38,7 @@ export default {
             return this.click();
         },
 
-        click(){
+        async click(){
 
             this.status = '';
             const value = this.value.replace(/\s+/g, ' ').trim();
@@ -47,37 +47,35 @@ export default {
             //search box
             if (value.length === 2*global.KAD_OPTIONS.NODE_ID_LENGTH){ //by hash
 
-                PANDORA_PROTOCOL_NODE.findPandoraBox( Buffer.from( value, 'hex'), (err, pandoraBox )=> {
+                try{
 
-                    console.log(err, pandoraBox);
+                    const pandoraBox = await PANDORA_PROTOCOL_NODE.findPandoraBox( Buffer.from( value, 'hex') );
 
-                    if (err) {
-                        this.status = 'Error';
-                        return;
-                    }
+                    console.log( pandoraBox );
 
                     this.status = 'Success!';
                     this.boxes.push(pandoraBox);
 
-                });
+                }catch(err){
+                    this.status = 'Error';
+                    console.error(err);
+                }
 
             } else { //by keyword hash
 
-                PANDORA_PROTOCOL_NODE.findPandoraBoxesByName( value, (err, out) =>{
+                try{
+                    const out = await PANDORA_PROTOCOL_NODE.findPandoraBoxesByName( value );
 
-                    console.log(err, out);
-                    if (err){
-                        this.status = 'Error';
-                        return;
-                    }
 
                     for (const key in out.result)
                         this.boxes.push( out.result[key] );
 
                     this.status = 'Success!';
 
-                } );
-
+                }catch(err){
+                    this.status = 'Error';
+                    console.err(err);
+                }
 
             }
 
