@@ -21,6 +21,9 @@
                 <div>
                     <span class="info">categories: {{this.box.categories.join(' --> ')}}</span>
                 </div>
+                <div>
+                    <span class="info">score: {{this.box.score}}</span>
+                </div>
             </div>
 
         </div>
@@ -67,7 +70,7 @@ export default {
     components: {Vote},
 
     props: {
-        box: null,
+        hash: null,
         enableStreamliner: false,
     },
 
@@ -78,6 +81,13 @@ export default {
     },
 
     computed:{
+
+        box(){
+            if (this.$store.state.pandoraBoxes.list[this.hash]) return this.$store.state.pandoraBoxes.list[this.hash];
+            if (this.$store.state.pandoraBoxMetas.list[this.hash]) return this.$store.state.pandoraBoxMetas.list[this.hash];
+            return null;
+        },
+
         pandoraBoxStreams(){
             return this.$store.state.pandoraBoxStreams.list;
         },

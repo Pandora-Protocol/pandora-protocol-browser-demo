@@ -1,11 +1,15 @@
 export default {
 
-    pandoraBoxStreamAdd({ state, commit, rootState }, pandoraBoxStream ) {
+    pandoraBoxStreamsAdd({ state, commit, rootState }, pandoraBoxStream ) {
         commit('setPandoraBoxStream', pandoraBoxStream);
     },
 
-    pandoraBoxStreamUpdate({state, commit, rootState}, pandoraBoxStream){
+    pandoraBoxStreamsUpdate({state, commit, rootState}, pandoraBoxStream){
         commit('setPandoraBoxStreamPercent', pandoraBoxStream)
+    },
+
+    pandoraBoxStreamsRemove({state, commit, rootState}, hashHex ){
+        commit('removePandoraBoxStream', hashHex)
     }
 
 }

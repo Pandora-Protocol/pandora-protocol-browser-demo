@@ -2,12 +2,14 @@ import Vue from 'vue';
 
 export default {
 
-    setPandoraBox(state, pandoraBox) {
+    setPandoraBox(state, {pandoraBox, stored}) {
 
         const out = pandoraBox.toJSON(true);
         out.hash = pandoraBox.hashHex;
         out.isDone = pandoraBox.isDone;
         out.percent = pandoraBox.percent;
+
+        out.stored = stored;
 
         for (let i=0; i < pandoraBox.streams.length; i++)
             out.streams[i].hash = pandoraBox.streams[i].hashHex;
@@ -21,8 +23,8 @@ export default {
         Vue.set(state.list[ pandoraBox.hashHex ], 'isDone', pandoraBox.isDone );
     },
 
-    removePandoraBox(state, pandoraBox){
-        Vue.delete(state.list, pandoraBox.hashHex );
+    removePandoraBox(state, { hashHex } ){
+        Vue.delete(state.list, hashHex );
     }
 
 }

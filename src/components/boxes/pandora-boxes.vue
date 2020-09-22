@@ -2,9 +2,9 @@
     <div>
         <h3>Pandora Boxes</h3>
 
-        <pandora-box v-for="(box, index) in pandoraBoxes"
-            :key="`pandora_box_${index}`"
-            :box="box">
+        <pandora-box v-for="(box, hash) in pandoraBoxes"
+            :key="`pandora_box_${hash}`"
+            :hash="hash">
         </pandora-box>
 
     </div>

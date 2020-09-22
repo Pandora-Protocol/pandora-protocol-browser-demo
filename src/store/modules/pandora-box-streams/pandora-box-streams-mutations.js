@@ -18,8 +18,8 @@ export default {
         Vue.set(state.list[ pandoraBoxStream.hashHex ], 'isDone', pandoraBoxStream.isDone );
     },
 
-    removePandoraBoxStream(state, pandoraBoxStream){
-        Vue.delete(state.list, pandoraBoxStream.hashHex );
+    removePandoraBoxStream(state, hashHex){
+        Vue.delete(state.list, hashHex );
     }
 
 }

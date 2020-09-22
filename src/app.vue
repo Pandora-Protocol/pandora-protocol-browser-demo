@@ -88,16 +88,15 @@ export default {
         window.PANDORA_PROTOCOL_NODE = node;
 
         for (const key in node.pandoraBoxes._boxesMap)
-            this.$store.dispatch('pandoraBoxesAdd', node.pandoraBoxes._boxesMap[key])
+            this.$store.dispatch('pandoraBoxesAdd', {pandoraBox: node.pandoraBoxes._boxesMap[key], stored: true} )
 
-        node.pandoraBoxes.on('pandora-box/added', pandoraBox => this.$store.dispatch('pandoraBoxesAdd', pandoraBox) )
-
+        node.pandoraBoxes.on('pandora-box/added', pandoraBox => this.$store.dispatch('pandoraBoxesAdd', {pandoraBox, stored: true} ) )
 
         node.pandoraBoxes.on('pandora-box/chunks/total-available', ({pandoraBox}) => this.$store.dispatch('pandoraBoxesUpdatePercent', pandoraBox) )
+        node.pandoraBoxes.on('pandora-box-meta/updated-sybil', pandoraBoxMeta => this.$store.dispatch('pandoraBoxesUpdate') )
 
-
-        node.pandoraBoxes.on('stream/chunk/done', ({stream})=> this.$store.dispatch('pandoraBoxStreamUpdate', stream) );
-        node.pandoraBoxes.on('stream/done', ({stream})=> this.$store.dispatch('pandoraBoxStreamUpdate', stream) );
+        node.pandoraBoxes.on('stream/chunk/done', ({stream})=> this.$store.dispatch('pandoraBoxStreamsUpdate', stream) );
+        node.pandoraBoxes.on('stream/done', ({stream})=> this.$store.dispatch('pandoraBoxStreamsUpdate', stream) );
 
 
     }
