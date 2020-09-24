@@ -3,7 +3,7 @@
 
         <div>
 
-            <vote class="vote" :hash="box.hash" />
+            <vote class="vote" :object="this.boxMeta" type="boxMeta" />
 
             <div class="meta" >
                 <div>
@@ -84,6 +84,11 @@ export default {
 
         box(){
             if (this.$store.state.pandoraBoxes.list[this.hash]) return this.$store.state.pandoraBoxes.list[this.hash];
+            if (this.$store.state.pandoraBoxMetas.list[this.hash]) return this.$store.state.pandoraBoxMetas.list[this.hash];
+            return null;
+        },
+
+        boxMeta(){
             if (this.$store.state.pandoraBoxMetas.list[this.hash]) return this.$store.state.pandoraBoxMetas.list[this.hash];
             return null;
         },

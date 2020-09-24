@@ -2,8 +2,11 @@
     <div>
         <h3>Find</h3>
         <input type="text" v-model="value" v-on:keyup.enter="onEnter" />
-        <button @click="click">-></button>
 
+        <template v-if="!loading">
+            <button @click="click">-></button>
+        </template>
+        <template v-else>loading...</template>
 
         <pandora-box v-for="(obj, index) in result"
                      :key="`find_pandora_box_${index}`"
@@ -27,6 +30,7 @@ export default {
     data(){
         return {
             value: '',
+            loading: false,
 
             status: '',
             result: [],
@@ -42,49 +46,57 @@ export default {
         async click(){
 
             this.status = '';
-            const value = this.value.replace(/\s+/g, ' ').trim();
+            this.loading = true;
 
-            for (const {hash, type} of this.result){
+            try{
 
-                if (type === "pandoraBox") this.$store.dispatch('pandoraBoxRemove', {hashHex: hash});
-                else if (type === "pandoraBoxMeta") this.$store.dispatch('pandoraBoxRemove', {hashHex: hash});
+                const value = this.value.replace(/\s+/g, ' ').trim();
 
-            }
+                for (const {hash, type} of this.result){
 
-            this.result = [];
+                    if (type === "pandoraBox") this.$store.dispatch('pandoraBoxRemove', {hashHex: hash});
+                    else if (type === "pandoraBoxMeta") this.$store.dispatch('pandoraBoxRemove', {hashHex: hash});
 
-            //search box
-            if (value.length === 2*global.KAD_OPTIONS.NODE_ID_LENGTH){ //by hash
+                }
 
-                try{
+                this.result = [];
+
+                //search box
+                if (value.length === 2*global.KAD_OPTIONS.NODE_ID_LENGTH){ //by hash
 
                     const pandoraBox = await PANDORA_PROTOCOL_NODE.findPandoraBox( Buffer.from( value, 'hex') );
 
-                    this.status = 'Success!';
-
                     this.processPandoraBox(pandoraBox);
 
-                }catch(err){
-                    this.status = 'Error finding box';
-                    console.error(err);
-                }
+                    global.FIND_RESULTS = {}
+                    global.FIND_RESULTS[pandoraBox.hashHex] = pandoraBox.pandoraBoxMeta;
 
-            } else { //by keyword hash
+                    this.status = 'Success!';
 
-                try{
+
+                } else { //by keyword hash
+
                     const out = await PANDORA_PROTOCOL_NODE.findPandoraBoxesByName( value );
+
+                    if (!out)
+                        return this.status = 'No results. Try different keywords';
 
                     for (const key in out.result)
                         this.processPandoraBoxMeta(out.result[key]);
 
+                    global.FIND_RESULTS = out.result;
+
                     this.status = 'Success!';
 
-                }catch(err){
-                    this.status = 'Error finding boxes';
-                    console.error(err);
                 }
 
+            }catch(err){
+                this.status = 'Error finding box';
+                console.error(err);
+            }finally{
+                this.loading = false;
             }
+
 
         },
 

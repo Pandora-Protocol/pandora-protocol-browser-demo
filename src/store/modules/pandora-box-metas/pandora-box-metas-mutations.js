@@ -11,13 +11,24 @@ export default {
 
         const votes = pandoraBoxMeta.getVotes();
 
-        out.upVotes = votes.upVotes;
-        out.downVotes = votes.downVotes;
-        out.totalVotes = votes.totalVotes;
+        out.votesUp = votes.votesUp;
+        out.votesDown = votes.votesDown;
+        out.votesTotal = votes.votesTotal;
 
         out.stored = stored;
 
         Vue.set(state.list, pandoraBoxMeta.hashHex, out );
+    },
+
+    setPandoraBoxUpdate(state, pandoraBoxMeta ){
+
+        Vue.set(state.list[pandoraBoxMeta.hashHex], 'score', pandoraBoxMeta.getScore() );
+
+        const votes = pandoraBoxMeta.getVotes();
+
+        Vue.set(state.list[pandoraBoxMeta.hashHex], 'votesUp', votes.votesUp );
+        Vue.set(state.list[pandoraBoxMeta.hashHex], 'votesDown', votes.votesDown );
+        Vue.set(state.list[pandoraBoxMeta.hashHex], 'votesTotal', votes.votesTotal );
     },
 
     removePandoraBoxMeta(state, { hashHex } ){

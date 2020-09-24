@@ -9,6 +9,10 @@ export default {
         if (state.list[hashHex] && (!state.list[hashHex].stored || includeStored))
             commit('removePandoraBoxMeta', hashHex);
 
-    }
+    },
+
+    pandoraBoxMetasUpdate({ state, commit, dispatch, rootState }, pandoraBoxMeta ) {
+        commit('setPandoraBoxUpdate', pandoraBoxMeta );
+    },
 
 }

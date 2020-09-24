@@ -4,9 +4,10 @@
             publishing...
         </template>
         <template v-else>
-            <div class="vote upvote"></div><br/>
+
+            <div class="vote upvote" @click="vote(true)"></div><br @click="vote(true)"/>
             <span class="sum">{{sum}}</span>
-            <div class="vote downvote"></div>
+            <div class="vote downvote" @click="vote(false)"></div>
         </template>
     </div>
 </template>
@@ -21,9 +22,53 @@ export default {
     },
 
     props:{
-        hash: {default: ''},
-        sum: {default: 0},
-    }
+        object: { default: null },
+        type: { default: null },
+    },
+
+    computed:{
+        sum(){
+            return this.object.votesUp - this.object.votesDown;
+        }
+    },
+
+    methods: {
+
+        getSybilObject(){
+
+            if (this.type === 'boxMeta') {
+
+                let box = PANDORA_PROTOCOL_NODE.pandoraBoxes.boxesMap[ this.object.hash ];
+                if (box) return box.pandoraBoxMeta;
+
+                if (global.FIND_RESULTS) {
+                    const boxMeta = global.FIND_RESULTS[this.object.hash];
+                    if (boxMeta) return boxMeta;
+                }
+
+            }
+
+        },
+
+        async vote(vote){
+
+            this.loading = true;
+            try{
+
+                const object = this.getSybilObject();
+                if (!object) throw "Sybil Object couldn't be found";
+
+                const out = await object.sybilProtectVoteSign(vote);
+
+            }catch(err){
+                 console.error(err);
+            }finally{
+                this.loading = false;
+            }
+
+        }
+
+    },
 
 }
 </script>

@@ -93,7 +93,8 @@ export default {
         node.pandoraBoxes.on('pandora-box/added', pandoraBox => this.$store.dispatch('pandoraBoxesAdd', {pandoraBox, stored: true} ) )
 
         node.pandoraBoxes.on('pandora-box/chunks/total-available', ({pandoraBox}) => this.$store.dispatch('pandoraBoxesUpdatePercent', pandoraBox) )
-        node.pandoraBoxes.on('pandora-box-meta/updated-sybil', pandoraBoxMeta => this.$store.dispatch('pandoraBoxesUpdate') )
+
+        node.pandoraBoxes.on('pandora-box-meta/updated-sybil', pandoraBoxMeta => this.$store.dispatch('pandoraBoxMetasUpdate', pandoraBoxMeta) )
 
         node.pandoraBoxes.on('stream/chunk/done', ({stream})=> this.$store.dispatch('pandoraBoxStreamsUpdate', stream) );
         node.pandoraBoxes.on('stream/done', ({stream})=> this.$store.dispatch('pandoraBoxStreamsUpdate', stream) );
