@@ -66,10 +66,10 @@ export default {
 
                     const pandoraBox = await PANDORA_PROTOCOL_NODE.findPandoraBox( Buffer.from( value, 'hex') );
 
-                    this.processPandoraBox(pandoraBox);
-
                     global.FIND_RESULTS = {}
                     global.FIND_RESULTS[pandoraBox.hashHex] = pandoraBox.pandoraBoxMeta;
+
+                    this.processPandoraBox(pandoraBox);
 
                     this.status = 'Success!';
 
@@ -81,10 +81,10 @@ export default {
                     if (!out)
                         return this.status = 'No results. Try different keywords';
 
+                    global.FIND_RESULTS = out.result;
+
                     for (const key in out.result)
                         this.processPandoraBoxMeta(out.result[key]);
-
-                    global.FIND_RESULTS = out.result;
 
                     this.status = 'Success!';
 

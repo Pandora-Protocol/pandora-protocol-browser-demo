@@ -39,7 +39,7 @@ export default {
             if (this.type === 'boxMeta') {
 
                 let box = PANDORA_PROTOCOL_NODE.pandoraBoxes.boxesMap[ this.object.hash ];
-                if (box) return box.pandoraBoxMeta;
+                if (box && box.streamliner) return box.streamliner.pandoraBoxMeta;
 
                 if (global.FIND_RESULTS) {
                     const boxMeta = global.FIND_RESULTS[this.object.hash];
