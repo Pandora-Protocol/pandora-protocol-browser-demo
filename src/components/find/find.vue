@@ -81,12 +81,14 @@ export default {
                     if (!out)
                         return this.status = 'No results. Try different keywords';
 
-                    global.FIND_RESULTS = out;
+                    global.FIND_RESULTS = {}
 
                     this.status = 'Success!';
 
-                    for (const result of out)
+                    for (const result of out) {
+                        global.FIND_RESULTS[result.hashHex] = result;
                         this.processPandoraBoxMeta(result);
+                    }
 
                 }
 

@@ -5,9 +5,9 @@
         </template>
         <template v-else>
 
-            <div class="vote upvote" @click="vote(true)"></div><br @click="vote(true)"/>
+            <div class="vote-triangle upvote" @click="vote(true)"></div>
             <span class="sum">{{sum}}</span>
-            <div class="vote downvote" @click="vote(false)"></div>
+            <div class="vote-triangle downvote" @click="vote(false)"></div>
         </template>
     </div>
 </template>
@@ -78,10 +78,10 @@ export default {
     .sum{
         position:absolute;
         margin-left: 4px;
-        margin-top: -10px;
+        padding-top: 10px;
     }
 
-    .vote{
+    .vote-triangle{
         cursor: pointer;
     }
 
@@ -93,15 +93,7 @@ export default {
         border-right: 8px solid transparent;
         border-bottom: 8px solid #CCCCFF;
     }
-    .upvote:after {
-          width: 5px;
-          height: 6px;
-          background-color: #CCCCFF;
-          content: '';
-          position:absolute;
-          margin-top: 8px;
-          margin-left: -3px;
-      }
+
 
     .downvote {
         width: 0;
@@ -110,15 +102,7 @@ export default {
         border-right: 8px solid transparent;
         border-top: 8px solid #CCCCFF;
         margin-left: -1px;
-        margin-top: 13px;
+        margin-top: 33px;
     }
-    .downvote:after {
-          width: 5px;
-          height: 6px;
-          background-color: #CCCCFF;
-          content: '';
-          position:absolute;
-          margin-left: -2px;
-          margin-top: -14px;
-      }
+
 </style>
