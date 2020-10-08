@@ -3,26 +3,26 @@
 
         <div>
 
-            <vote class="vote" :object="this.boxMeta" type="boxMeta" />
+            <vote class="vote" :object="boxMeta" type="boxMeta" />
 
             <div class="meta" >
                 <div>
-                    <span class="info">hash: <span class="bold">{{ this.box.hash }}</span></span>
+                    <span class="info">hash: <span class="bold">{{ box.hash }}</span></span>
                 </div>
                 <div>
-                    <span class="info">name: {{ this.box.name }}</span>
+                    <span class="info">name: {{ box.name }}</span>
                 </div>
                 <div>
-                    <span class="info">description: {{ this.box.description }}</span>
+                    <span class="info">description: {{ box.description }}</span>
                 </div>
                 <div>
-                    <span class="info">size: {{this.box.size}}</span>
+                    <span class="info">size: {{box.size}}</span>
                 </div>
                 <div>
-                    <span class="info">categories: {{this.box.categories.join(' --> ')}}</span>
+                    <span class="info">categories: {{box.categories.join(' --> ')}}</span>
                 </div>
                 <div>
-                    <span class="info">score: {{this.box.score}}</span>
+                    <span class="info">score: {{boxMeta.score}}</span>
                 </div>
             </div>
 
@@ -50,6 +50,14 @@
         <div v-if="enableStreamliner">
             <span v-if="streamlineLoading">...loading</span>
             <span v-else @click="streamline" class="action"> >>>> </span>
+        </div>
+        <div v-if="!enableStreamliner && boxMeta.crawlerStoreOperations['seed:count']">
+            <div v-if=" boxMeta.crawlerStoreOperations['seed:count'] !==  boxMeta.crawlerStoreOperations['seed:index']">
+                seeding... {{ (boxMeta.crawlerStoreOperations['seed:index'])  / boxMeta.crawlerStoreOperations['seed:count'] * 100 }} %
+            </div>
+            <div v-else>
+                seeding ready!
+            </div>
         </div>
 
         Percent {{box.percent}} %

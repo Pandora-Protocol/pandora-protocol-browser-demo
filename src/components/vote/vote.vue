@@ -1,7 +1,10 @@
 <template>
     <div>
         <template v-if="loading">
-            publishing...
+            <span>publishing</span>
+            <template v-if="object.crawlerStoreOperations['vote:count']">
+                {{ (object.crawlerStoreOperations['vote:index'])  / object.crawlerStoreOperations['vote:count'] * 100 }} %
+            </template>
         </template>
         <template v-else>
 
@@ -58,7 +61,7 @@ export default {
                 const object = this.getSybilObject();
                 if (!object) throw "Sybil Object couldn't be found";
 
-                const out = await object.sybilProtectVoteSign(vote);
+                const out = await object.sybilProtectVoteSign('vote', vote);
 
             }catch(err){
                  console.error(err);

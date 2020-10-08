@@ -81,6 +81,8 @@ export default {
                     if (!out)
                         return this.status = 'No results. Try different keywords';
 
+                    console.log("out", out);
+
                     global.FIND_RESULTS = {}
 
                     this.status = 'Success!';

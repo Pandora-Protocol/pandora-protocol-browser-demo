@@ -16,7 +16,9 @@
 
         <div class="block">
             <input  type="text" v-model="name" />
-            <span v-if="loading">...processing</span>
+            <span v-if="loading">
+                ...processing
+            </span>
             <button v-else @click="click">seed box</button>
         </div>
 
@@ -37,6 +39,8 @@ export default {
             name:'browser demo box',
             streams: [],
             streamsMap: {},
+
+            hash: '',
         }
     },
 
@@ -51,6 +55,10 @@ export default {
 
             return out;
 
+        },
+
+        pandoraBoxMeta(){
+            return this.$store.state.pandoraBoxMetas.list[this.hash];
         }
     },
 
@@ -88,23 +96,25 @@ export default {
 
             try{
 
-                const out = await PANDORA_PROTOCOL_NODE.seedPandoraBox( this.streams, this.name, '', [], undefined );
+                const out = await PANDORA_PROTOCOL_NODE.seedPandoraBox( this.streams, this.name, '', [], undefined, false );
                 console.log(out);
 
                 this.status = 'Success! ' + out.pandoraBox.hashHex;
+                this.hash = out.pandoraBox.hashHex;
 
-                if (out && out.pandoraBox)
-                    this.reset()
-
+                await out.pandoraBox.streamliner.start('seed');
+                this.loading = false;
 
             }catch(err){
                 console.error(err);
                 this.status = err;
+                this.loading = false;
             }finally{
                 this.loading = false;
             }
 
         }
+
     }
 
 }

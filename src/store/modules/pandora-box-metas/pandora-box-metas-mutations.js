@@ -14,6 +14,7 @@ export default {
         out.votesUp = votes.votesUp;
         out.votesDown = votes.votesDown;
         out.votesTotal = votes.votesTotal;
+        out.crawlerStoreOperations = {};
 
         out.stored = stored;
 
@@ -33,6 +34,18 @@ export default {
 
     removePandoraBoxMeta(state, { hashHex } ){
         Vue.delete(state.list, hashHex );
+    },
+
+    setPandoraBoxUpdateCrawlerStoringCountOperations(state, {hash, count, statusName } ){
+        if (statusName) {
+            Vue.set(state.list[hash.toString('hex')].crawlerStoreOperations, statusName + ':count', count);
+            Vue.set(state.list[hash.toString('hex')].crawlerStoreOperations, statusName + ':index', 0);
+        }
+    },
+
+    setPandoraBoxUpdateCrawlerStoringOperationsIndex(state, { hash, status, statusName} ){
+        if (status === 'stored' && statusName)
+            Vue.set(state.list[hash.toString('hex')].crawlerStoreOperations, statusName+':index', state.list[hash.toString('hex')].crawlerStoreOperations[statusName+':index'] +1);
     }
 
 }

@@ -96,6 +96,12 @@ export default {
 
         node.pandoraBoxes.on('pandora-box-meta/updated-sybil', pandoraBoxMeta => this.$store.dispatch('pandoraBoxMetasUpdate', pandoraBoxMeta) )
 
+        node.pandoraBoxes.on('pandora-box-meta/crawler/store/count-operations', data => this.$store.dispatch('pandoraBoxMetasCrawlerStoringCountOperationsUpdate', data) )
+        node.pandoraBoxes.on('pandora-box-meta/crawler/store/by-hash', data => this.$store.dispatch('pandoraBoxMetasCrawlerStoringOperationsIndexUpdate', data) )
+        node.pandoraBoxes.on('pandora-box/crawler/store/by-hash', data => this.$store.dispatch('pandoraBoxMetasCrawlerStoringOperationsIndexUpdate', data) )
+        node.pandoraBoxes.on('pandora-box-meta/crawler/store/merge-by-hash', data => this.$store.dispatch('pandoraBoxMetasCrawlerStoringOperationsIndexUpdate', data) )
+        node.pandoraBoxes.on('pandora-box-meta/crawler/store/by-name', data => this.$store.dispatch('pandoraBoxMetasCrawlerStoringOperationsIndexUpdate', data) )
+
         node.pandoraBoxes.on('stream/chunk/done', ({stream})=> this.$store.dispatch('pandoraBoxStreamsUpdate', stream) );
         node.pandoraBoxes.on('stream/done', ({stream})=> this.$store.dispatch('pandoraBoxStreamsUpdate', stream) );
 
