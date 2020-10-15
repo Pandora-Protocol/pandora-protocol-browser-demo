@@ -45,7 +45,7 @@
 <script>
 
 import SybilProtectSignModal from "src/components/sybil-protect-sign-modal/sybil-protect-sign.modal"
-import Vue from "vue";
+import config from "config/config"
 
 export default {
 
@@ -53,16 +53,10 @@ export default {
 
     async created(){
 
-        const sybilKeys = {
-            publicKey: Buffer.from("049cf62611922a64575439fd14e0a1190c40184c4d20a1c7179828693d574e84b94b70c3f3995b7a2cd826e1e8ef9eb8ccf90e578891ecfe10de6a4dc9371cd19a", 'hex'),
-            uri: 'http://pandoraprotocol.ddns.net:9090/challenge/',
-            origin: 'http://pandoraprotocol.ddns.net:9090',
-        }
-
         PANDORA_PROTOCOL.KAD.init({
             PLUGINS:{
                 CONTACT_SYBIL_PROTECT: {
-                    SYBIL_PUBLIC_KEYS: [ sybilKeys ],
+                    SYBIL_PUBLIC_KEYS: config.SYBIL_PROTECT_KEYS,
                 }
             }
         });
