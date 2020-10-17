@@ -51,56 +51,61 @@ export default {
 
     components: {SybilProtectSignModal},
 
-    async created(){
+    created(){
+        this.initialize();
+    },
 
-        PANDORA_PROTOCOL.KAD.init({
-            PLUGINS:{
-                CONTACT_SYBIL_PROTECT: {
-                    SYBIL_PUBLIC_KEYS: config.SYBIL_PROTECT_KEYS,
+    methods:{
+
+        async initialize(){
+            PANDORA_PROTOCOL.KAD.init({
+                PLUGINS:{
+                    CONTACT_SYBIL_PROTECT: {
+                        SYBIL_PUBLIC_KEYS: config.SYBIL_PROTECT_KEYS,
+                    }
                 }
+            });
+
+            PANDORA_PROTOCOL.init({});
+
+            const node = new PANDORA_PROTOCOL.PandoraProtocolNode( '' );
+
+            node.sybilProtectSigner.openWindow = ({origin, uri, promise, message, resolve, reject}) => {
+                this.$refs['refSybilProtectSignModal'].showModal(null, origin, uri, message, promise, resolve, reject);
             }
-        });
 
-        PANDORA_PROTOCOL.init({});
+            node.sybilProtectSigner.onCloseWindow = () => {
+                this.$refs['refSybilProtectSignModal'].hideModal();
+            }
 
-        const node = new PANDORA_PROTOCOL.PandoraProtocolNode( '' );
+            await node.start();
 
-        node.sybilProtectSigner.openWindow = ({origin, uri, promise, message, resolve, reject}) => {
-            this.$refs['refSybilProtectSignModal'].showModal(null, origin, uri, message, promise, resolve, reject);
+            this.$store.dispatch('pandoraProtocolChangeOptions', KAD_OPTIONS )
+            this.$store.dispatch('pandoraProtocolChangeContact', node.contact )
+            this.$store.dispatch('pandoraProtocolChangeReady', true)
+
+            window.PANDORA_PROTOCOL_NODE = node;
+
+            for (const key in node.pandoraBoxes._boxesMap)
+                this.$store.dispatch('pandoraBoxesAdd', {pandoraBox: node.pandoraBoxes._boxesMap[key], stored: true} )
+
+            node.pandoraBoxes.on('pandora-box/added', pandoraBox => this.$store.dispatch('pandoraBoxesAdd', {pandoraBox, stored: true} ) )
+
+            node.pandoraBoxes.on('pandora-box/chunks/total-available', ({pandoraBox}) => this.$store.dispatch('pandoraBoxesUpdatePercent', pandoraBox) )
+
+            node.pandoraBoxes.on('pandora-box-meta/updated-sybil', pandoraBoxMeta => this.$store.dispatch('pandoraBoxMetasUpdate', pandoraBoxMeta) )
+
+            node.pandoraBoxes.on('pandora-box-meta/crawler/store/count-operations', data => this.$store.dispatch('pandoraBoxMetasCrawlerStoringCountOperationsUpdate', data) )
+            node.pandoraBoxes.on('pandora-box-meta/crawler/store/by-hash', data => this.$store.dispatch('pandoraBoxMetasCrawlerStoringOperationsIndexUpdate', data) )
+            node.pandoraBoxes.on('pandora-box/crawler/store/by-hash', data => this.$store.dispatch('pandoraBoxMetasCrawlerStoringOperationsIndexUpdate', data) )
+            node.pandoraBoxes.on('pandora-box-meta/crawler/store/merge-by-hash', data => this.$store.dispatch('pandoraBoxMetasCrawlerStoringOperationsIndexUpdate', data) )
+            node.pandoraBoxes.on('pandora-box-meta/crawler/store/by-name', data => this.$store.dispatch('pandoraBoxMetasCrawlerStoringOperationsIndexUpdate', data) )
+
+            node.pandoraBoxes.on('stream/chunk/done', ({stream})=> this.$store.dispatch('pandoraBoxStreamsUpdate', stream) );
+            node.pandoraBoxes.on('stream/done', ({stream})=> this.$store.dispatch('pandoraBoxStreamsUpdate', stream) );
         }
 
-        node.sybilProtectSigner.onCloseWindow = () => {
-            this.$refs['refSybilProtectSignModal'].hideModal();
-        }
-
-        await node.start();
-
-        this.$store.dispatch('pandoraProtocolChangeOptions', KAD_OPTIONS )
-        this.$store.dispatch('pandoraProtocolChangeContact', node.contact )
-        this.$store.dispatch('pandoraProtocolChangeReady', true)
-
-        window.PANDORA_PROTOCOL_NODE = node;
-
-        for (const key in node.pandoraBoxes._boxesMap)
-            this.$store.dispatch('pandoraBoxesAdd', {pandoraBox: node.pandoraBoxes._boxesMap[key], stored: true} )
-
-        node.pandoraBoxes.on('pandora-box/added', pandoraBox => this.$store.dispatch('pandoraBoxesAdd', {pandoraBox, stored: true} ) )
-
-        node.pandoraBoxes.on('pandora-box/chunks/total-available', ({pandoraBox}) => this.$store.dispatch('pandoraBoxesUpdatePercent', pandoraBox) )
-
-        node.pandoraBoxes.on('pandora-box-meta/updated-sybil', pandoraBoxMeta => this.$store.dispatch('pandoraBoxMetasUpdate', pandoraBoxMeta) )
-
-        node.pandoraBoxes.on('pandora-box-meta/crawler/store/count-operations', data => this.$store.dispatch('pandoraBoxMetasCrawlerStoringCountOperationsUpdate', data) )
-        node.pandoraBoxes.on('pandora-box-meta/crawler/store/by-hash', data => this.$store.dispatch('pandoraBoxMetasCrawlerStoringOperationsIndexUpdate', data) )
-        node.pandoraBoxes.on('pandora-box/crawler/store/by-hash', data => this.$store.dispatch('pandoraBoxMetasCrawlerStoringOperationsIndexUpdate', data) )
-        node.pandoraBoxes.on('pandora-box-meta/crawler/store/merge-by-hash', data => this.$store.dispatch('pandoraBoxMetasCrawlerStoringOperationsIndexUpdate', data) )
-        node.pandoraBoxes.on('pandora-box-meta/crawler/store/by-name', data => this.$store.dispatch('pandoraBoxMetasCrawlerStoringOperationsIndexUpdate', data) )
-
-        node.pandoraBoxes.on('stream/chunk/done', ({stream})=> this.$store.dispatch('pandoraBoxStreamsUpdate', stream) );
-        node.pandoraBoxes.on('stream/done', ({stream})=> this.$store.dispatch('pandoraBoxStreamsUpdate', stream) );
-
-
-    }
+    },
 
 }
 </script>
